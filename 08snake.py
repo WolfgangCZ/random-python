@@ -15,6 +15,9 @@ DIR_RIGHT = Vec2(1, 0)
 #TODO generate snack 
 #TODO make it so its a head and list of body coordinates 
 
+class InfoPanel:
+    def __init__(self, name) -> None:
+        self.name = name
 
 class SnakeField:
     
@@ -84,10 +87,11 @@ SNAKE_WIN_Y = WIN_HEIGHT/2 - SNAKE_WIN_HEIGHT/2 + WIN_PANEL_HEIGHT/2
 GRID_NUM = 20 #in a row and its a square
 STARTING_POS = Vec2(int(GRID_NUM/2), int(GRID_NUM/2))
 
-info_panel = pygame.Rect(WIN_PANEL_X, WIN_PANEL_Y, WIN_WIDTH, WIN_PANEL_HEIGHT)
-game_window = pygame.Rect(SNAKE_WIN_X, SNAKE_WIN_Y, SNAKE_WIN_WIDTH, SNAKE_WIN_HEIGHT)
-snake_screen = SnakeField(game_window, GRID_NUM)
-snake_screen.init(STARTING_POS)
+info_panel_rect = pygame.Rect(WIN_PANEL_X, WIN_PANEL_Y, WIN_WIDTH, WIN_PANEL_HEIGHT)
+
+game_window_rect = pygame.Rect(SNAKE_WIN_X, SNAKE_WIN_Y, SNAKE_WIN_WIDTH, SNAKE_WIN_HEIGHT)
+game_window = SnakeField(game_window_rect, GRID_NUM)
+game_window.init(STARTING_POS)
 
 
 
@@ -111,7 +115,7 @@ while running:
             running = False
     screen.fill(BACKGROUND_COLOR)
 
-    snake_screen.drawEverthing()
+    game_window.drawEverthing()
 
     #keyboards
 
@@ -127,14 +131,14 @@ while running:
         snake_direction = DIR_DOWN
 
     if int(frame)%(int(FPS/snake_speed)) == 0:
-        snake_screen.moveSnake(snake_direction)
+        game_window.moveSnake(snake_direction)
 
     frame += 1
-    pygame.draw.rect(screen, "blue", info_panel, 2)
+    pygame.draw.rect(screen, "blue", info_panel_rect, 2)
     pygame.draw.rect(screen, "red", game_window, 2)
     pygame.display.flip()
     clock.tick(FPS)
-    if snake_screen.checkCollision():
+    if game_window.checkCollision():
         break
 
 screen.fill(BACKGROUND_COLOR)

@@ -65,7 +65,6 @@ linesBuffer = LinesBuffer()
 
 while running:
     for event in pygame.event.get():
-        print(event)
         if event.type == pygame.QUIT:
             running = False
     screen.fill("white")
@@ -74,12 +73,13 @@ while running:
 
     end_mouse_pos.x = pygame.mouse.get_pos()[0]
     end_mouse_pos.y = pygame.mouse.get_pos()[1]
-    #it doesnt work like this
-    # if pygame.mouse.get_pressed()[0]:
-    #     linesBuffer.AddLine(copy.deepcopy(start_mouse_pos), copy.deepcopy(end_mouse_pos))
-    #     # print(pygame.mouse.get_pos()[0])
-    #     # print(pygame.mouse.get_pos()[1])
-    #     #print(pygame.mouse.get_pressed()[0])
+    
+    if pygame.mouse.get_pressed()[0]:
+        linesBuffer.AddLine(copy.deepcopy(start_mouse_pos), copy.deepcopy(end_mouse_pos))
+        # print(pygame.mouse.get_pos()[0])
+        # print(pygame.mouse.get_pos()[1])
+        #print(pygame.mouse.get_pressed()[0])
+        
     linesBuffer.DrawLines(screen)
     
     # linesBuffer.print_lines_coord()
