@@ -2,6 +2,7 @@ import pygame
 import math
 import random
 
+
 class Paddle:
     global PADDLE_COLOUR
     global PADDLE_SPEED
@@ -42,6 +43,9 @@ class Vector2:
         self.x = t_x
         self.y = t_y
 
+def checkCollision(ball_coord: Vector2, ball_radius, rect: pygame.Rect):
+    pass
+    
 class Ball:
     global screen
     global BALL_COLOUR
@@ -71,8 +75,8 @@ class Ball:
             self.coord.y = BALL_RADIUS
             self.direction.y *= -1
             
-    def checkCollision(self):
-        pass
+    # def checkBounce(self, paddle_rec):
+    #     if self.coord.x + BALL_RADIUS
 
 PADDLE_WIDTH = 50
 
@@ -81,7 +85,7 @@ WIN_HEIGHT = 600
 BACKGROUND_COLOR = "black"
 PADDLE_OFFSET = 20
 PADDLE_WIDTH = 100
-PADDLE_THICKNESS = 20
+PADDLE_THICKNESS = 10
 PADDLE_COLOUR = "white"
 BALL_COLOUR = "white"
 PADDLE_SPEED = 5
