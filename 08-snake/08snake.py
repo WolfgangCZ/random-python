@@ -149,9 +149,11 @@ while running:
         # print(event)
         if event.type == pygame.QUIT:
             running = False
-    screen.fill(BACKGROUND_COLOR)
 
     if not game_over:
+        screen.fill(BACKGROUND_COLOR)
+        pygame.draw.rect(screen, "white", info_panel_rect)
+        pygame.draw.rect(screen, "black", game_window_rect, 1)
         score = len(game_window.snake)-1
         hscore_text = font_bahn.render(f'High score: {high_score}', True, blue, "white")
         score_text = font_bahn.render(f'Score: {score}', True, blue, "white")
@@ -179,26 +181,27 @@ while running:
 
 
         frame += 1
-        pygame.draw.rect(screen, "blue", info_panel_rect, 2)
-        pygame.draw.rect(screen, "red", game_window_rect, 2)
+
         pygame.display.flip()
         clock.tick(FPS)
         if game_window.checkCollision():
             game_over = True
         
-        
-
-    
     if game_over:
+        print("collision")
+        screen.fill(BACKGROUND_COLOR)
+        key = pygame.key.get_pressed()
+        screen.blit(end_text,end_text_rect)
+        pygame.display.flip()
         if score > high_score:
             f = open("08-snake/score.txt", "w")
             f.write(f"{score}")
             f.close()
-        screen.blit(end_text,end_text_rect)
         if key[pygame.K_r]:
             game_over = False
             game_window.snake.clear()
-            game_window.init()
+            snake_direction = DIR_UP
+            game_window.init(STARTING_POS)
             f = open("08-snake/score.txt", "r")
             high_score = int(f.readline())
             f.close()
