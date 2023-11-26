@@ -1,6 +1,8 @@
 import pygame
 import random
 
+pygame.init()
+
 class Vec2:
     def __init__(self, x, y) -> None:
         self.x = x
@@ -15,12 +17,23 @@ DIR_RIGHT = Vec2(1, 0)
 #TODO generate snack 
 #TODO make it so its a head and list of body coordinates 
 
+f = open("08-snake/score.txt", "r")
+high_score = int(f.readline())
+print(high_score)
+f.close()
+
+
+
+score = 0
+
+
 class InfoPanel:
     def __init__(self, name) -> None:
         self.name = name
 
 class SnakeField:
     
+    global score
     global screen
     snake = list()
     snack = Vec2(2,4)
@@ -31,6 +44,7 @@ class SnakeField:
         self.tile_size = window.width/grid
 
     def init(self, starting_pos: Vec2):
+        self.snake.clear()
         self.snake.append(starting_pos)
 
     def drawEverthing(self):
@@ -52,7 +66,6 @@ class SnakeField:
             if i == 0:
                 continue
             if self.snake[i].x == self.snake[0].x and self.snake[i].y == self.snake[0].y:
-                print("colliosion!")
                 return True
         return False
         
@@ -101,12 +114,35 @@ screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
 timer = 0
 dt = 0
 
+# fonts = pygame.font.get_fonts()
+# print(len(fonts))
+# for f in fonts:
+#     print(f)
+
+blue = (0,0,255)
+
+
+font_bahn = pygame.font.SysFont("bahnschrift", 30)
+
+hscore_text = font_bahn.render(f'High score: {high_score}', True, blue, "white")
+hscore_text_rect = hscore_text.get_rect()
+hscore_text_rect.topleft = (0,0)
+
+score_text = font_bahn.render(f'Score: {high_score}', True, blue, "white")
+score_text_rect = score_text.get_rect()
+score_text_rect.topleft = (WIN_WIDTH/2,0)
+
+end_text = font_bahn.render(f'Game over, press R to play again', True, blue, "white")
+end_text_rect = end_text.get_rect()
+end_text_rect.center = (WIN_WIDTH/2,WIN_HEIGHT/2)
+
 
 snake_direction = DIR_UP
 tail_direction = DIR_UP
-snake_speed = 20 ##ticks per second
+snake_speed = 10 ##ticks per second
 running = True
 frame = 0
+game_over = False
 
 while running:
     for event in pygame.event.get():
@@ -115,33 +151,56 @@ while running:
             running = False
     screen.fill(BACKGROUND_COLOR)
 
-    game_window.drawEverthing()
+    if not game_over:
+        score = len(game_window.snake)-1
+        hscore_text = font_bahn.render(f'High score: {high_score}', True, blue, "white")
+        score_text = font_bahn.render(f'Score: {score}', True, blue, "white")
 
-    #keyboards
+        screen.blit(score_text,score_text_rect)
+        screen.blit(hscore_text,hscore_text_rect)
 
-    key = pygame.key.get_pressed()
+        game_window.drawEverthing()
 
-    if key[pygame.K_RIGHT] and snake_direction != DIR_LEFT:
-        snake_direction = DIR_RIGHT
-    if key[pygame.K_LEFT] and snake_direction != DIR_RIGHT:
-        snake_direction = DIR_LEFT
-    if key[pygame.K_UP] and snake_direction != DIR_DOWN:
-        snake_direction = DIR_UP
-    if key[pygame.K_DOWN] and snake_direction != DIR_UP:
-        snake_direction = DIR_DOWN
+        #keyboards
 
-    if int(frame)%(int(FPS/snake_speed)) == 0:
-        game_window.moveSnake(snake_direction)
+        key = pygame.key.get_pressed()
 
-    frame += 1
-    pygame.draw.rect(screen, "blue", info_panel_rect, 2)
-    pygame.draw.rect(screen, "red", game_window, 2)
-    pygame.display.flip()
-    clock.tick(FPS)
-    if game_window.checkCollision():
-        break
+        if key[pygame.K_RIGHT] and snake_direction != DIR_LEFT:
+            snake_direction = DIR_RIGHT
+        if key[pygame.K_LEFT] and snake_direction != DIR_RIGHT:
+            snake_direction = DIR_LEFT
+        if key[pygame.K_UP] and snake_direction != DIR_DOWN:
+            snake_direction = DIR_UP
+        if key[pygame.K_DOWN] and snake_direction != DIR_UP:
+            snake_direction = DIR_DOWN
 
-screen.fill(BACKGROUND_COLOR)
-print("you lost")
+        if int(frame)%(int(FPS/snake_speed)) == 0:
+            game_window.moveSnake(snake_direction)
+
+
+        frame += 1
+        pygame.draw.rect(screen, "blue", info_panel_rect, 2)
+        pygame.draw.rect(screen, "red", game_window_rect, 2)
+        pygame.display.flip()
+        clock.tick(FPS)
+        if game_window.checkCollision():
+            game_over = True
+        
+        
+
+    
+    if game_over:
+        if score > high_score:
+            f = open("08-snake/score.txt", "w")
+            f.write(f"{score}")
+            f.close()
+        screen.blit(end_text,end_text_rect)
+        if key[pygame.K_r]:
+            game_over = False
+            game_window.snake.clear()
+            game_window.init()
+            f = open("08-snake/score.txt", "r")
+            high_score = int(f.readline())
+            f.close()
 
 pygame.quit()
