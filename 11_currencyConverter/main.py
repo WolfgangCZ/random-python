@@ -6,7 +6,6 @@ win_width = 500
 win_height = 500
 
 while True:
-
     window.title("test")
     window.minsize(width=win_width, height=win_height)
 
@@ -16,8 +15,10 @@ while True:
     my_frame = tkinter.Frame()
     my_frame.pack()
 
-
     my_label = tkinter.Label(text="label", font=("Arial", 24, "bold"))
     my_label.pack()
 
     window.mainloop()
+
+#TODO make currency converter which connects on the internet and gather data through some API
+    # EURO, CZK, USD, GBP, KRW
