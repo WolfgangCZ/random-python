@@ -18,7 +18,7 @@ for i in range(num_traders):
 
 
 for result in trader_result:
-    
+    pass
 
 
 
