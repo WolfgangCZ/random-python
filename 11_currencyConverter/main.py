@@ -9,34 +9,61 @@ curr_date = datetime.date.today()
 curr_date = "".join(str(curr_date).split("-"))
 
 curr_raw = requests.get(f"https://data.kurzy.cz/json/meny/b[6]den[{curr_date}]cb[volat].js")
-curr_json = json.loads(curr_raw.text[6:-2])
+curr_raw = curr_raw.text[6:-4]
+curr_raw += ',"CZK":{"jednotka":1,"dev_stred":1,"dev_nakup":null,"dev_prodej":null,"val_stred":null,"val_nakup":null,"val_prodej":null,"nazev":"Americk\u00FD dolar","url":"https://www.kurzy.cz/usd"}}}'
+curr_json = json.loads(curr_raw)
 
-curr_list = ["AUD","BRL","GBP","BGN","CNY","DKK","EUR","PHP","HKD","INR","IDR","ISK","ILS","JPY","ZAR",
-            "KRW","CAD","HUF","MYR","MXN","XDR","NOK","NZD","PLN","RON","SGD","SEK","CHF","THB","TRY","USD", "CZK"]
 
-for i in range(len(curr_list)-1):
-    curr_rate = curr_json["kurzy"][f"{curr_list[i]}"]["dev_stred"]
-    print(f"exchange rate for {curr_list[i]} is", end=" ")
-    print(curr_rate)
-    
+curr_list = []
+
+for curr in curr_json["kurzy"]:
+    curr_list.append(curr)
+    print(curr)
+
+def update():
+    global label_info
+    global exchange_rate
+    exchange_rate = float(curr_json["kurzy"][f"{output_curr}"]["dev_stred"])/float(curr_json["kurzy"][f"{input_curr}"]["dev_stred"])
+    label_info.configure(text=f"Exchange rate {input_curr} to {output_curr} is {exchange_rate:.2f} today")
+
+
 def swap():
     global input_curr
     global output_curr
     input_curr, output_curr = output_curr, input_curr
+    dropbox_in.current(curr_list.index(input_curr))
+    dropbox_out.current(curr_list.index(output_curr))
+    update()
+    
+
 def calculate():
+    update()
     global exchange_rate
     global exchange_result
     global input_curr
     global output_curr
-    global output_amount
     global input_amount
-    if output_curr == "CZK":
-        exchange_rate = str(1/float(curr_json["kurzy"][f"{input_curr}"]["dev_stred"]))
-    else:
-        exchange_rate = curr_json["kurzy"][f"{output_curr}"]["dev_stred"]
-    exchange_result = f"result: {input_amount} {input_amount} is {output_amount} {output_amount}"
+    global output_amount
+    global label_result
+    try:
+        input_amount = float(enter_curr.get())
+        output_amount = float(input_amount)/float(exchange_rate)
+        exchange_result = f"result: {input_amount:.2f} {input_curr} is {output_amount:.2f} {output_curr}"
+        label_result.configure(text = exchange_result)
+    except:
+        print("error")
+        label_result.configure(text = "ERROR: Incorrect input! Has to be a number")    
+    
+
 def dropbox_change(event):
-    print("dropbox changed")    
+    global dropbox_in
+    global dropbox_out
+    global input_curr
+    global output_curr
+    global curr_list
+    input_curr = dropbox_in.get()
+    output_curr = dropbox_out.get()
+    update()
 
 class LayoutManager:
     def __init__(self) -> None:
@@ -69,49 +96,54 @@ layout = LayoutManager()
 
 main_win = tk.Tk()
 main_win.title("Curr_list converter")
-default_curr = curr_list[6]
-input_curr = "CZK"
-output_curr = default_curr
+input_curr = curr_list[6]
+output_curr = curr_list[-1]
 exchange_rate = curr_json["kurzy"][f"{output_curr}"]["dev_stred"]
 exchange_result = ""
 
 input_amount = 0
 output_amount = 0
 
-label_title = ttk.Label(main_win, text = "Main title:")
-label_entry = ttk.Label(main_win, text = f"Exchange {input_curr} to {output_curr}:")
-label_dropbox = ttk.Label(main_win, text = f"Choose output currency:")
-label_units = ttk.Label(main_win, text = f"{output_curr}")
-label_info = ttk.Label(main_win, text = f"xhange rate: {exchange_rate}, {exchange_result}")
+label1 = ttk.Label(main_win, text = "From: ")
+label2 = ttk.Label(main_win, text = " to: ")
+label3 = ttk.Label(main_win, text = " amount: ")
+label_info = ttk.Label(main_win, text = f"Exchange rate {input_curr} to {output_curr} is {exchange_rate} today")
+label_result = ttk.Label(main_win, text = f"")
 
+
+
+dropbox_in = ttk.Combobox(main_win, values=curr_list)
+dropbox_out = ttk.Combobox(main_win, values=curr_list)
 
 # entry widgets, used to take entry from user
 enter_curr = ttk.Entry(main_win)
-
-dropbox = ttk.Combobox(main_win, text =curr_list[6],values=curr_list)
 
 btn_swap = ttk.Button(text = "Swap currencies", command=swap)
 btn_calc = ttk.Button(text = "Calculate", command=calculate)
 
 
 # layout using layout manager
-label_title.grid(column=layout.currCol(),   row = layout.currRow(), columnspan=layout.spanCol(666), sticky = tk.W, pady = 2)
 
-label_entry.grid(column=layout.setCol(0),   row = layout.nextRow(), sticky = tk.W, pady = 2)
-enter_curr.grid(column=layout.nextCol(),    row = layout.currRow(), sticky = tk.W, pady = 2)
-label_units.grid(column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
+label1.grid(     column=layout.setCol(0),   row = layout.currRow(), sticky = tk.W, pady = 2)
+dropbox_in.grid( column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
+label2.grid(     column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
+dropbox_out.grid(column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
+label3.grid(     column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
+enter_curr.grid( column=layout.nextCol(),   row = layout.currRow(), sticky = tk.W, pady = 2)
 
 label_info.grid(column=layout.setCol(0),    row = layout.nextRow(), columnspan=layout.spanCol(666), sticky = tk.W, pady = 2)
+label_result.grid(column=layout.setCol(0),    row = layout.nextRow(), columnspan=layout.spanCol(666), sticky = tk.W, pady = 2)
 
-label_dropbox.grid(column=layout.setCol(0),    row = layout.nextRow(), sticky = tk.W, pady = 2)
-dropbox.grid(column=layout.nextCol(),    row = layout.currRow(), sticky = tk.W, pady = 2)
 
-btn_swap.grid(column=layout.setCol(0),      row = layout.nextRow(), sticky = tk.W, pady = 2)
+btn_swap.grid(column=layout.setCol(6),      row = layout.nextRow(), sticky = tk.W, pady = 2)
 btn_calc.grid(column=layout.nextCol(),      row = layout.currRow(), sticky = tk.E, pady = 2)
 
-# TODO: make next dropbox
+dropbox_in.current(6)
+dropbox_out.current(len(curr_list)-1)
 
-dropbox.bind('<<ComboboxSelected>>', dropbox_change)
+
+dropbox_in.bind('<<ComboboxSelected>>', dropbox_change)
+dropbox_out.bind('<<ComboboxSelected>>', dropbox_change)
 
 
 # # this will arrange entry widgets
@@ -120,6 +152,7 @@ dropbox.bind('<<ComboboxSelected>>', dropbox_change)
  
 # # infinite loop which can be terminated by keyboard
 # # or mouse interrupt
+update()
 tk.mainloop()
 
 #TODO make curr_list converter which connects on the internet and gather data through some API
