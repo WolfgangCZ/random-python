@@ -18,14 +18,13 @@ curr_list = []
 
 for curr in curr_json["kurzy"]:
     curr_list.append(curr)
-    print(curr)
+    # print(curr)
 
 def update():
     global label_info
     global exchange_rate
     exchange_rate = float(curr_json["kurzy"][f"{output_curr}"]["dev_stred"])/float(curr_json["kurzy"][f"{input_curr}"]["dev_stred"])
-    label_info.configure(text=f"Exchange rate {input_curr} to {output_curr} is {exchange_rate:.2f} today")
-
+    label_info.configure(text=f"Exchange rate {input_curr} to {output_curr} is {exchange_rate:.2f} as of today ({datetime.date.today()})")
 
 def swap():
     global input_curr
@@ -51,7 +50,6 @@ def calculate():
         exchange_result = f"result: {input_amount:.2f} {input_curr} is {output_amount:.2f} {output_curr}"
         label_result.configure(text = exchange_result)
     except:
-        print("error")
         label_result.configure(text = "ERROR: Incorrect input! Has to be a number")    
     
 
@@ -107,7 +105,7 @@ output_amount = 0
 label1 = ttk.Label(main_win, text = "From: ")
 label2 = ttk.Label(main_win, text = " to: ")
 label3 = ttk.Label(main_win, text = " amount: ")
-label_info = ttk.Label(main_win, text = f"Exchange rate {input_curr} to {output_curr} is {exchange_rate} today")
+label_info = ttk.Label(main_win)
 label_result = ttk.Label(main_win, text = f"")
 
 
