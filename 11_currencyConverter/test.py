@@ -1,41 +1,20 @@
-import tkinter as tk
-from tkinter import ttk
-from tkinter.messagebox import showinfo
-from calendar import month_name
+# Import the required library
+from tkinter import *
 
-root = tk.Tk()
+# Create an instance of tkinter frame or widget
+win = Tk()
+win.geometry("700x350")
 
-# config the root window
-root.geometry('300x200')
-root.resizable(False, False)
-root.title('Combobox Widget')
+def update_text():
+   # Configuring the text in Label widget
+   label.configure(text="This is updated Label text")
 
-# label
-label = ttk.Label(text="Please select a month:")
-label.pack(fill=tk.X, padx=5, pady=5)
+# Create a label widget
+label=Label(win, text="This is New Label text", font=('Helvetica 14 bold'))
+label.pack(pady= 30)
 
-# create a combobox
-selected_month = tk.StringVar()
-month_cb = ttk.Combobox(root, textvariable=selected_month)
+# Create a button to update the text of label widget
+button=Button(win, text= "Update", command=update_text)
+button.pack()
 
-# get first 3 letters of every month name
-month_cb['values'] = [month_name[m][0:3] for m in range(1, 13)]
-
-# prevent typing a value
-month_cb['state'] = 'readonly'
-
-# place the widget
-month_cb.pack(fill=tk.X, padx=5, pady=5)
-
-
-# bind the selected value changes
-def month_changed(event):
-    """ handle the month changed event """
-    showinfo(
-        title='Result',
-        message=f'You selected {selected_month.get()}!'
-    )
-
-month_cb.bind('<<ComboboxSelected>>', month_changed)
-
-root.mainloop()
+win.mainloop()
