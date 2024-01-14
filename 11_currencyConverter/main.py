@@ -1,5 +1,22 @@
 import tkinter as tk
 import tkinter.ttk as ttk
+import requests
+import json
+
+curr_raw = requests.get("https://data.kurzy.cz/json/meny/b[6]den[20211111]cb[volat].js")
+curr_json = json.loads(curr_raw.text[6:-2])
+
+curr_list = ["AUD","BRL","GBP","BGN","CNY","DKK","EUR","PHP","HKD","INR","IDR","ISK","ILS","JPY","ZAR",
+            "KRW","CAD","HUF","MYR","MXN","XDR","NOK","NZD","PLN","RON","SGD","SEK","CHF","THB","TRY","USD"]
+
+for i in range(len(curr_list)):
+    curr_rate = curr_json["kurzy"][f"{curr_list[i]}"]["dev_stred"]
+    print(f"exchange rate for {curr_list[i]} is", end=" ")
+    print(curr_rate)
+    
+def rename():
+    global l1
+    l1["text"] = ""
 
 class LayoutManager:
     def __init__(self) -> None:
@@ -20,7 +37,7 @@ layout = LayoutManager()
 
 # creating main tkinter window/toplevel
 main_win = tk.Tk()
-main_win.title("Currency converter")
+main_win.title("Curr_list converter")
 
 
 # this will create a label widget
@@ -33,9 +50,7 @@ l4 = ttk.Label(main_win, text = "Fourth:")
 e1 = ttk.Entry(main_win)
 e2 = ttk.Entry(main_win)
 
-def rename():
-    global l1
-    l1["text"] = "changed label asdf asdfasdf asdkjfhas;dkfh as;dkfhj ask;fhj;asdkfh j;asdkfgh jsa asdfas dfasd fasdf asg dfghdsh d"
+drop_list = ttk.Combobox(main_win, textvariable=curr_list[6],values=curr_list)
 
 btn1 = ttk.Button(text = "change", command=rename)
 
@@ -48,6 +63,7 @@ l4.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady = 2
 e1.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady = 2)
 e2.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady = 2)
 btn1.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady = 2)
+drop_list.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady = 2)
 
 
 
@@ -60,5 +76,5 @@ btn1.grid(row = layout.newRow(), column = layout.newCol(), sticky = tk.W, pady =
 # # or mouse interrupt
 tk.mainloop()
 
-#TODO make currency converter which connects on the internet and gather data through some API
+#TODO make curr_list converter which connects on the internet and gather data through some API
     # EURO, CZK, USD, GBP, KRW
