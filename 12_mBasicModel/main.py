@@ -13,7 +13,7 @@ plt.scatter(my_data[:, 0].reshape(-1,1), y)
 # plt.show()
 
 alpha = 0.0000001
-iters = 100000
+iters = 10000
 theta = np.array([[1.0, 1.0]])
 
 
