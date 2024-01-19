@@ -1,3 +1,6 @@
-import win32com.client
+import re
 
-app = win32com.client.Dispatch("Autocad.AdvanceSteel")
+txt = "The rain in Spain"
+
+x = re.search("\s", txt)
+print("The first white-space character is located in position:", x.start())
