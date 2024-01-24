@@ -1,10 +1,10 @@
-from pixel_drawer import PixelDrawer
+from pygame.math import Vector2
 
 
-class PixelBody:
-    def __init__(self, screen):
-        self.pixels = [[]]
-        self.drawer = PixelDrawer(screen)
-
-    def draw_body(self, body: list):
-        pass
+class Body:
+    def __init__(self, shape: list, pos: Vector2):
+        # TODO check for body shape
+        self.shape = shape
+        self.width = len(self.shape[0])
+        self.height = len(self.shape)
+        self.pos = pos

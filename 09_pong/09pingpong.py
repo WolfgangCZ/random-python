@@ -1,4 +1,4 @@
-imoprt os
+import os
 import sys
 
 import pygame
@@ -7,13 +7,17 @@ import random
 
 pygame.init()
 
+dirname = os.path.dirname("__file__")
+sys.path.append(dirname)
 
 class Vector2:
     def __init__(self, x: float, y: float) -> None:
         self.x = x
         self.y = y
+
     def lenght(self) -> float:
         return float(math.sqrt(self.x*self.x + self.y*self.y))
+
     def normalize(self):
         l = self.lenght()
         if self.x != 0:
@@ -33,18 +37,23 @@ class Paddle:
     global WIN_HEIGHT
     global screen
     speed = 0
+
     def __init__(self, paddle_rec: pygame.Rect) -> None:
         self.paddle_rec = paddle_rec
+        
+
     def draw(self):
         pygame.draw.rect(screen, PADDLE_COLOUR, self.paddle_rec)
         if self.paddle_rec.y <= 0:
             self.paddle_rec.y = 0
         elif self.paddle_rec.y + self.paddle_rec.height >= WIN_HEIGHT:
             self.paddle_rec.y = WIN_HEIGHT - self.paddle_rec.height
+
     def move(self, dir: Vector2):
             self.paddle_rec.y += dir.y*PADDLE_SPEED
+
     def checkCollision(self, ball_coord: Vector2, ball_radius):
-        ball_rect = pygame.Rect(0,0,2*ball_radius,2*ball_radius)
+        ball_rect = pygame.Rect(0, 0, 2*ball_radius, 2*ball_radius)
         ball_rect.center = (ball_coord.x, ball_coord.y)
         if pygame.Rect.colliderect(ball_rect, self.paddle_rec):
             return True
@@ -64,13 +73,14 @@ def checkCollision(ball_coord: Vector2, ball_radius, rect: pygame.Rect):
         return True
     else:
         return False
-    
+
 class Ball:
     global screen
     global BALL_COLOUR
     global WIN_WIDTH
     global WIN_HEIGHT
     global BALL_RADIUS
+
     def __init__(self, speed) -> None:
         self.direction = Vector2(random.uniform(-1,1), random.uniform(-0.5,0.5))
         self.direction.normalize()
@@ -78,21 +88,25 @@ class Ball:
         self.coord = pygame.math.Vector2(WIN_WIDTH/2, WIN_HEIGHT/2)
         print(self.direction.x)
         print(self.direction.y)
+
     def draw(self):
         pygame.draw.circle(screen, BALL_COLOUR, self.coord, BALL_RADIUS)
         self.checkBoundaries()
+
     def move(self):
         self.coord.x += self.speed*self.direction.x
         self.coord.y += self.speed*self.direction.y
+
     def checkBoundaries(self):
-        #bottom
+        # bottom
         if self.coord.y + BALL_RADIUS > WIN_HEIGHT:
             self.coord.y = WIN_HEIGHT - BALL_RADIUS
             self.direction.y *= -1
-        #top
+        # top
         if self.coord.y - BALL_RADIUS < 0:
             self.coord.y = BALL_RADIUS
             self.direction.y *= -1 
+
     def reset(self):
         self.direction = Vector2(random.uniform(-1,1), random.uniform(-0.5,0.5))
         self.direction.normalize()
@@ -138,7 +152,7 @@ score_right = 0
 
 frame = 0
 
-font_bahn = pygame.font.Font("09-pong/upheavtt.ttf", 50)
+font_bahn = pygame.font.Font("upheavtt.ttf", 50)
 
 score_text = font_bahn.render(f'{score_left} | {score_right}', True, "white", "black")
 score_text_rect = score_text.get_rect()
@@ -165,7 +179,7 @@ while running:
         running = False
     if key[pygame.K_r]:
         ball.reset()
-    
+
     ball.move()
     ball.draw()
     paddle_left.draw()
@@ -180,12 +194,10 @@ while running:
     if ball.coord.x < 0:
         score_right += 1
         ball.reset()
-        
+
     if ball.coord.x > WIN_WIDTH:
         score_left += 1
         ball.reset()
-    
-
 
     pygame.display.flip()
     clock.tick(FPS)

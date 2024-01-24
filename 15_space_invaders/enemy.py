@@ -1,6 +1,5 @@
-from body import PixelBody
-
 
 class Enemy:
-    def __init__(self, screen):
-        self.body = PixelBody(screen)
+    def __init__(self, body):
+        print("creating enemy")
+        self.body = body

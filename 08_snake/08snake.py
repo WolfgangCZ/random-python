@@ -1,5 +1,9 @@
 import pygame
 import random
+import os, sys
+
+dirname = os.path.dirname("__file__")
+sys.path.append(dirname)
 
 pygame.init()
 
@@ -17,7 +21,7 @@ DIR_RIGHT = Vec2(1, 0)
 #TODO generate snack 
 #TODO make it so its a head and list of body coordinates 
 
-f = open("08-snake/score.txt", "r")
+f = open("score.txt", "r")
 high_score = int(f.readline())
 print(high_score)
 f.close()
@@ -194,7 +198,7 @@ while running:
         screen.blit(end_text,end_text_rect)
         pygame.display.flip()
         if score > high_score:
-            f = open("08-snake/score.txt", "w")
+            f = open("score.txt", "w")
             f.write(f"{score}")
             f.close()
         if key[pygame.K_r]:
@@ -202,7 +206,7 @@ while running:
             game_window.snake.clear()
             snake_direction = DIR_UP
             game_window.init(STARTING_POS)
-            f = open("08-snake/score.txt", "r")
+            f = open("score.txt", "r")
             high_score = int(f.readline())
             f.close()
 
