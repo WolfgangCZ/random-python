@@ -23,6 +23,7 @@ frame = 0
 
 running = True
 
+
 while running:
     for event in pygame.event.get():
         # print(event)
