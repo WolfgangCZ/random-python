@@ -23,6 +23,15 @@ frame = 0
 
 running = True
 
+class enemy:
+    def __init__(self):
+        pass
+
+class body:
+    def __init__(self):
+        pass
+
+
 
 while running:
     for event in pygame.event.get():
