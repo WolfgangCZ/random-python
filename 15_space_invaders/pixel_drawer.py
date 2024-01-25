@@ -8,8 +8,6 @@ class PixelDrawer:
         self.pixel_size = pixel_size
 
     def draw(self, body: Body):
-        print(f"drawing body, posx: {body.pos.x}, posy {body.pos.y}")
-        print(f"drawing body, body width: {body.width}")
         for i in range(body.width):
             for j in range(body.height):
                 if body.shape[j][i] == 1:
