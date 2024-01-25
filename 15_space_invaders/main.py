@@ -14,7 +14,6 @@ BACKGROUND_COLOR = "black"
 
 pygame.init()
 
-
 class LineGrid:
     def __init__(self, screen, win_w, win_h, pixel_size, color):
         self.pixel_size = pixel_size
@@ -35,13 +34,18 @@ class LineGrid:
 
 
 class EnemyGrid:
-    def __init__(self, cols, rows, pos: Vector2):
+    def __init__(self, cols, rows, pos: Vector2, grid_w, grid_h):
         self.rows = rows
         self.cols = cols
         self.pos = pos
+        self.grid_w = grid_w
+        self.grid_h = grid_h
 
-    def let_pos_list(self, pos):
-        pass
+    def get_pos_list(self, pos: Vector2, col, row):
+        curr_pos = Vector2()
+        curr_pos.x = pos.x + col*self.grid_w/rows
+
+
 
 
 FPS = 60
