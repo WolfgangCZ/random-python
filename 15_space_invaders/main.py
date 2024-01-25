@@ -35,11 +35,13 @@ class LineGrid:
 
 
 class EnemyGrid:
-    def __init__(self, cols, rows, pixel_size, pad_hor, pad_ver):
+    def __init__(self, cols, rows, pos: Vector2):
         self.rows = rows
         self.cols = cols
-        self.pad_hor = pad_hor
-        self.pad_ver = pad_ver
+        self.pos = pos
+
+    def let_pos_list(self, pos):
+        pass
 
 
 FPS = 60
