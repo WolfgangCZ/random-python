@@ -43,8 +43,8 @@ class EnemyGrid:
 
     def get_pos_list(self, pos: Vector2, col, row):
         curr_pos = Vector2()
-        curr_pos.x = pos.x + col*self.grid_w/rows
-
+        curr_pos.x = pos.x + col*self.grid_w/self.rows
+        curr_pos.y = pos.y + row*self.grid_h/self.cols
 
 
 
