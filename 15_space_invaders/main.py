@@ -12,7 +12,10 @@ PIXEL_SIZE = 4
 
 NUM_ENEMY_ROWS = 5
 NUM_ENEMY_COLS = 11
-
+SIDE_BOUND = 50
+UPPER_BOUND = 50
+MOVE_MARGIN = 100
+ENEMY_FIELD_HEIGHT = (WIN_HEIGHT - UPPER_BOUND) * 0.6
 
 BACKGROUND_COLOR = "black"
 
@@ -65,11 +68,11 @@ line_grid = LineGrid(SCREEN, WIN_WIDTH, WIN_HEIGHT, PIXEL_SIZE, "gray20")
 enemy_grid = EnemyGrid(NUM_ENEMY_COLS,
                        NUM_ENEMY_ROWS,
                        START_POS,
-                       0.8 * WIN_WIDTH,
-                       0.6 * WIN_HEIGHT)
-grid_pos = Vector2(50, 50)
+                       WIN_WIDTH - MOVE_MARGIN - 2*SIDE_BOUND,
+                       ENEMY_FIELD_HEIGHT)
+grid_pos = Vector2(SIDE_BOUND, UPPER_BOUND)
 enemies = []
-
+dt = 0
 for i in range(NUM_ENEMY_ROWS):
     for j in range(NUM_ENEMY_COLS):
         if i == 0:
@@ -88,22 +91,18 @@ for i in range(NUM_ENEMY_ROWS):
             enemy = Enemy(enemy_body_bot)
             enemies.append(enemy)
 
-
-
-
-
-
 while running:
     for event in pygame.event.get():
         # print(event)
         if event.type == pygame.QUIT:
             running = False
+    dt += 60 / FPS
     SCREEN.fill(BACKGROUND_COLOR)
+
 
     for enemy in enemies:
         pixel_drawer.draw(enemy.body)
     # line_grid.draw_grid()
-
     pygame.display.flip()
     clock.tick(FPS)
 pygame.quit()
