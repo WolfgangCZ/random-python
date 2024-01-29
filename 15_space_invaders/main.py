@@ -96,10 +96,13 @@ while running:
         # print(event)
         if event.type == pygame.QUIT:
             running = False
-    dt += 60 / FPS
+    dt += 1/FPS
     SCREEN.fill(BACKGROUND_COLOR)
 
-
+    if int(dt*100) % 100 == 0:
+        for i in range(len(enemies)):
+            enemies[i].body.pos.x += PIXEL_SIZE
+    print(f"enemy pos x: {enemies[0].body.pos.x}")
     for enemy in enemies:
         pixel_drawer.draw(enemy.body)
     # line_grid.draw_grid()
