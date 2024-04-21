@@ -15,7 +15,7 @@ func("hello from the funciton")
 
 
 class pepa:
-    def __init():
+    def __init__(self):
         pass
 
 

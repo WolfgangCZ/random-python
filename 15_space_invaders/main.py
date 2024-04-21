@@ -1,3 +1,4 @@
+""" Entry point of the game """
 import pygame
 from pixel_drawer import PixelDrawer
 from body_factory import BodyFactory
@@ -34,6 +35,7 @@ class LineGrid:
             pygame.draw.line(self.screen, self.color,
                              (self.pixel_size*i, 0),
                              (self.pixel_size*i, self.win_h), 1)
+
         for i in range(int(self.win_h/self.pixel_size+1)):
             pygame.draw.line(self.screen, self.color,
                              (0, self.pixel_size*i),
@@ -61,18 +63,21 @@ clock = pygame.time.Clock()
 timer = 0
 frame = 0
 running = True
+enemies = []
+dt = 0.0
 
 pixel_drawer = PixelDrawer(SCREEN, PIXEL_SIZE)
 body_factory = BodyFactory()
 line_grid = LineGrid(SCREEN, WIN_WIDTH, WIN_HEIGHT, PIXEL_SIZE, "gray20")
+
 enemy_grid = EnemyGrid(NUM_ENEMY_COLS,
                        NUM_ENEMY_ROWS,
                        START_POS,
                        WIN_WIDTH - MOVE_MARGIN - 2*SIDE_BOUND,
                        ENEMY_FIELD_HEIGHT)
 grid_pos = Vector2(SIDE_BOUND, UPPER_BOUND)
-enemies = []
-dt = 0
+
+
 for i in range(NUM_ENEMY_ROWS):
     for j in range(NUM_ENEMY_COLS):
         if i == 0:
@@ -102,20 +107,13 @@ while running:
     if int(dt*100) % 100 == 0:
         for i in range(len(enemies)):
             enemies[i].body.pos.x += PIXEL_SIZE
-    print(f"enemy pos x: {enemies[0].body.pos.x}")
+
+    # print(f"enemy pos x: {enemies[0].body.pos.x}")
+
     for enemy in enemies:
         pixel_drawer.draw(enemy.body)
     # line_grid.draw_grid()
     pygame.display.flip()
     clock.tick(FPS)
+
 pygame.quit()
-
-
-
-
-
-
-
-
-
-
