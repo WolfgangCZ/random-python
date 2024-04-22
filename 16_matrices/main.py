@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 mat1 = np.array([1,2,3,4])
 mat2 = np.array([0,2,3,0])
@@ -19,3 +20,10 @@ print(np.sum(mat1*mat2))
 print(np.matmul(mat1, mat3))
 print(np.matmul(A, B))
 print(A@B)
+
+rand = np.random.randn(100,1) * 10
+softmax = np.exp(rand)/np.sum(np.exp(rand))
+
+plt.scatter(rand, softmax)
+plt.show()
+print(rand)
