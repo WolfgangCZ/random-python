@@ -21,9 +21,14 @@ print(np.matmul(mat1, mat3))
 print(np.matmul(A, B))
 print(A@B)
 
-rand = np.random.randn(100,1) * 10
-softmax = np.exp(rand)/np.sum(np.exp(rand))
+rand1 = np.random.randn(100,1) * 10
+softmax = np.exp(rand1)/np.sum(np.exp(rand1))
 
-plt.scatter(rand, softmax)
+# plt.scatter(rand1, softmax)
+# plt.show()
+
+rand2 = np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20])
+logrand2 = np.log(rand2)
+
+plt.scatter(rand2, logrand2)
 plt.show()
-print(rand)
