@@ -1,9 +1,9 @@
 import os
 import sys
-
-import pygame
 import math
 import random
+
+import pygame
 
 pygame.init()
 
@@ -31,16 +31,16 @@ class Vector2:
         self.x = t_x
         self.y = t_y
 
+DIR_UP = Vector2(0.0, -1.0)
+DIR_DOWN = Vector2(0.0, 1.0)
+DIR_LEFT = Vector2(-1.0, 0.0)
+DIR_RIGHT = Vector2(1.0, 0.0)
+
 class Paddle:
-    global PADDLE_COLOUR
-    global PADDLE_SPEED
-    global WIN_HEIGHT
-    global screen
     speed = 0
 
     def __init__(self, paddle_rec: pygame.Rect) -> None:
         self.paddle_rec = paddle_rec
-        
 
     def draw(self):
         pygame.draw.rect(screen, PADDLE_COLOUR, self.paddle_rec)
@@ -49,8 +49,8 @@ class Paddle:
         elif self.paddle_rec.y + self.paddle_rec.height >= WIN_HEIGHT:
             self.paddle_rec.y = WIN_HEIGHT - self.paddle_rec.height
 
-    def move(self, dir: Vector2):
-            self.paddle_rec.y += dir.y*PADDLE_SPEED
+    def move(self, direction: Vector2):
+            self.paddle_rec.y += direction.y * PADDLE_SPEED
 
     def checkCollision(self, ball_coord: Vector2, ball_radius):
         ball_rect = pygame.Rect(0, 0, 2*ball_radius, 2*ball_radius)
@@ -61,25 +61,15 @@ class Paddle:
             return False
 
 
-DIR_UP = Vector2(0, -1)
-DIR_DOWN = Vector2(0, 1)
-DIR_LEFT = Vector2(-1, 0)
-DIR_RIGHT = Vector2(1, 0)
 
 def checkCollision(ball_coord: Vector2, ball_radius, rect: pygame.Rect):
     ball_rect = pygame.Rect(0,0,2*ball_radius,2*ball_radius)
     ball_rect.center = (ball_coord.x, ball_coord.y)
     if pygame.Rect.colliderect(ball_rect, rect):
         return True
-    else:
-        return False
+    return False
 
 class Ball:
-    global screen
-    global BALL_COLOUR
-    global WIN_WIDTH
-    global WIN_HEIGHT
-    global BALL_RADIUS
 
     def __init__(self, speed) -> None:
         self.direction = Vector2(random.uniform(-1,1), random.uniform(-0.5,0.5))
@@ -105,7 +95,7 @@ class Ball:
         # top
         if self.coord.y - BALL_RADIUS < 0:
             self.coord.y = BALL_RADIUS
-            self.direction.y *= -1 
+            self.direction.y *= -1
 
     def reset(self):
         self.direction = Vector2(random.uniform(-1,1), random.uniform(-0.5,0.5))
@@ -152,7 +142,11 @@ score_right = 0
 
 frame = 0
 
-font_bahn = pygame.font.Font("upheavtt.ttf", 50)
+font_bahn_path = "upheavtt.ttf"
+if not os.path.exists(font_bahn_path):
+    font_bahn_path = "09_pong/upheavtt.ttf"
+font_bahn = pygame.font.Font(font_bahn_path, 50)
+
 
 score_text = font_bahn.render(f'{score_left} | {score_right}', True, "white", "black")
 score_text_rect = score_text.get_rect()
@@ -163,10 +157,12 @@ while running:
         # print(event)
         if event.type == pygame.QUIT:
             running = False
+
     screen.fill(BACKGROUND_COLOR)
     frame += 1
 
     key = pygame.key.get_pressed()
+
     if key[pygame.K_w]:
         paddle_left.move(DIR_UP)
     elif key[pygame.K_s]:
@@ -176,7 +172,7 @@ while running:
     elif key[pygame.K_DOWN]:
         paddle_right.move(DIR_DOWN)
     if key[pygame.K_ESCAPE]:
-        running = False
+        break
     if key[pygame.K_r]:
         ball.reset()
 
