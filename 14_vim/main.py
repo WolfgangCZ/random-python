@@ -18,7 +18,7 @@ class pepa:
     def __init__(self):
         pass
 
-
+x = 1/0
 mason = 1
 
 lst = [1, 2, 3, 4, 5, 6, 7, 8, 9]
